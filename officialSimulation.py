@@ -40,28 +40,36 @@ class controlPanel(tk.Toplevel):
 
 
         tk.Label(self, text="angle of projection").grid(row=0, column=0)
-        self.angleOfProjection = tk.Scale(self, from_=0, to=90, width=25, orient="horizontal")
-        self.angleOfProjection.grid(row=0, column=1)
+        self.angleOfProjectionScale = tk.Scale(self, from_=0, to=90, width=25, orient="horizontal")
+        self.angleOfProjectionScale.grid(row=0, column=1)
 
         tk.Label(self, text="velocity").grid(row=1, column=0)
-        self.velocity = tk.Scale(self, from_=0, to=100, orient="horizontal", width=25)
-        self.velocity.grid(row=1, column=1)
+        self.velocityScale = tk.Scale(self, from_=0, to=100, orient="horizontal", width=25)
+        self.velocityScale.grid(row=1, column=1)
 
         self.submitInfo = tk.Button(self, text="submit all information", command=self.getInfo, width=20)
         self.submitInfo.grid(row=2, column=0)
 
-        self.launchButton = tk.Button(self, command=mainGameLoop, width=25, text="Launch")
+        self.launchButton = tk.Button(self, command=self.intialiseGameLoop, width=25, text="Launch")
         self.launchButton.grid(row=3, column=0)
 
         self.closeAll = tk.Button(self, command=self.destroyPanel, width=25, text="close control panel")
         self.closeAll.grid(row=4, column=0)
 
 
-    #method on this object will be the button functions
+    #methods this object will have are the functions called by buttons
+    def intialiseGameLoop(self):
+
+        mainGameLoop(self.velocity, self.angle) # main game loop with values it gets
+
     def getInfo(self):
 
-        tk.Label(self, text=f"  The angle of projection is {self.angleOfProjection.get()}").grid(row=0, column=2)
-        tk.Label(self, text=f"  The velocity is {self.velocity.get()}").grid(row=1, column=2)
+        #need to get angle of projectiom and velocity, so we add 2 additonal attributes we can add
+        self.angle = self.angleOfProjectionScale.get()
+        self.velocity = self.velocityScale.get()
+
+        tk.Label(self, text=f"  The angle of projection is {self.angle}").grid(row=0, column=2)
+        tk.Label(self, text=f"  The velocity is {self.velocity}").grid(row=1, column=2)
 
         return None
     
@@ -84,7 +92,6 @@ openControlPanel.pack()
 
 
 #now we are going to make code for the animations
-
 displayGraph = tk.Button(root, text="display graph of projectile motion", command=drawMotion)
 displayGraph.pack()
 
