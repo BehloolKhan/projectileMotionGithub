@@ -2,6 +2,8 @@
 
 import pygame #for rendering
 import tkinter as tk#required for GUI for user to interact with
+import math #for numerical calculations
+import numpy
 
 #libraries to plot projectory of ball graphically and for animations
 import matplotlib.pyplot as plt 
@@ -53,11 +55,23 @@ class controlPanel(tk.Toplevel):
         self.launchButton = tk.Button(self, command=self.intialiseGameLoop, width=25, text="Launch")
         self.launchButton.grid(row=3, column=0)
 
+        self.displayGraph = tk.Button(self, text="display graph of projectile motion", command=self.drawMotionBall)
+        self.displayGraph.grid(row=4, column = 0)
+
         self.closeAll = tk.Button(self, command=self.destroyPanel, width=25, text="close control panel")
-        self.closeAll.grid(row=4, column=0)
+        self.closeAll.grid(row=5, column=0)
 
 
     #methods this object will have are the functions called by buttons
+
+    def drawMotionBall(self):
+
+        #need to convert angle to radian
+        angleRadians = self.angle/180*numpy.pi
+        verticalVelocity = self.velocity*math.sin(angleRadians)
+        
+        drawMotion(verticalVelocity)
+
     def intialiseGameLoop(self):
 
         mainGameLoop(self.velocity, self.angle) # main game loop with values it gets
@@ -89,11 +103,6 @@ def openControl():
 #button to open this control panel
 openControlPanel = tk.Button(root, text="open control panel", command=openControl)
 openControlPanel.pack()
-
-
-#now we are going to make code for the animations
-displayGraph = tk.Button(root, text="display graph of projectile motion", command=drawMotion)
-displayGraph.pack()
 
 
 root.mainloop()
