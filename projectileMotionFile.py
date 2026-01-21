@@ -24,7 +24,7 @@ class Ball(pygame.sprite.Sprite):
         angle = ((numpy.pi) / 180) * angle
 
         self.speed_horizontal = initialVelocity*math.cos(angle)
-        self.speed_vertical = -initialVelocity*math.cos(angle)
+        self.speed_vertical = -initialVelocity*math.sin(angle)
         self.scale_factor = 10 #10 pixels = 1 meter
 
         self.line_scale_factor = 4
