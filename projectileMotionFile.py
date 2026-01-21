@@ -2,12 +2,15 @@
 import pygame #for rendering and display
 import numpy #for physics/maths
 import matplotlib #for graphs
+import math #for projectile calculations
 
 class Ball(pygame.sprite.Sprite):
 
+    #down = positive, due to pygame co-ordinate system
+
     acc = 9.81
 
-    def __init__(self, surfaceOfBall: pygame.Surface, colorOfBall:tuple, center:pygame.Vector2, radius):
+    def __init__(self, surfaceOfBall: pygame.Surface, colorOfBall:tuple, center:pygame.Vector2, radius, initialVelocity:int, angle:int):
 
         #invoke constructor method of parent class
 
@@ -15,26 +18,29 @@ class Ball(pygame.sprite.Sprite):
         self.color = colorOfBall
         self.radius = radius
         self.center = center
-
         self.surface = surfaceOfBall
-        self.speed_h = 20
-        self.speed_v = -20
 
-        self.scale_factor = 10
+        #need to convert angle value into radians
+        angle = ((numpy.pi) / 180) * angle
 
+        self.speed_horizontal = initialVelocity*math.cos(angle)
+        self.speed_vertical = -initialVelocity*math.cos(angle)
+        self.scale_factor = 10 #10 pixels = 1 meter
+
+        self.line_scale_factor = 4
         
         pygame.draw.circle(self.surface, self.color, self.center, self.radius)
 
 
     def update(self, time):
         #update the co-ordinates
-        self.center.x += time*self.speed_h*self.scale_factor
-        self.center.y += self.speed_v*time*self.scale_factor
+        self.center.x += time*self.speed_horizontal*self.scale_factor
+        self.center.y += self.speed_vertical*time*self.scale_factor
         
         #update the velocity:
         #horizontal remains the same
         #vertical changes
-        self.speed_v = (self.speed_v) + Ball.acc*time
+        self.speed_vertical = (self.speed_vertical) + Ball.acc*time
 
     def draw(self, surfaceOfBall):
 
@@ -43,13 +49,13 @@ class Ball(pygame.sprite.Sprite):
         #we are going to draw a line
         #what will happen is that the starting point = center
 
-        verticalVelocityVector = self.center + pygame.Vector2(0, self.speed_v*self.scale_factor)
+        verticalVelocityVector = self.center + pygame.Vector2(0, self.speed_vertical*self.line_scale_factor)
         pygame.draw.line(self.surface, (255, 255, 255), self.center, verticalVelocityVector, 5)
 
-        horizontalVelocityVector = self.center + pygame.Vector2(self.speed_h*self.scale_factor, 0)
+        horizontalVelocityVector = self.center + pygame.Vector2(self.speed_horizontal*self.line_scale_factor, 0)
         pygame.draw.line(self.surface, (0, 255, 0), self.center, horizontalVelocityVector, 5)
 
-        velocityVector = self.center + pygame.Vector2(self.speed_h*self.scale_factor, self.speed_v*self.scale_factor)
+        velocityVector = self.center + pygame.Vector2(self.speed_horizontal*self.line_scale_factor, self.speed_vertical*self.line_scale_factor)
         pygame.draw.line(self.surface, (255, 0, 0), self.center, velocityVector, 5)
 
         #draw the acceleration aswell
@@ -60,7 +66,7 @@ class Ball(pygame.sprite.Sprite):
 
 #set up the dimensions of screen and everything
 
-def mainGameLoop():
+def mainGameLoop(initialVelocity, angle):
 
     pygame.init()
 
@@ -73,10 +79,10 @@ def mainGameLoop():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     screen.fill(bg_colour) #specify the color over here
 
-    ball_radius = 10
-    ball_centre = pygame.Vector2(20.0, SCREEN_HEIGHT/2)
+    ball_radius = 20
+    ball_centre = pygame.Vector2(20.0, SCREEN_HEIGHT/2 - 50)
 
-    ball = Ball(screen, BLUE_COLOUR, ball_centre, ball_radius) #draw the circle
+    ball = Ball(screen, BLUE_COLOUR, ball_centre, ball_radius, initialVelocity, angle) #draw the circle
     Clock = pygame.time.Clock()
 
     running = True
@@ -102,11 +108,11 @@ def mainGameLoop():
 
         pygame.display.flip() #update the display
 
-        change_time = Clock.tick(500) #lets see what happens when u increase it
-        change_time = change_time / 500 #convert it to seconds
+        change_time = Clock.tick(100) #lets see what happens when u increase it
+        change_time = change_time / 1000 #convert it to seconds
         ball.update(change_time)
     
     pygame.quit() #show down the pyagme window from here
 
 if __name__ == "__main__":
-    mainGameLoop()
+    mainGameLoop(45, 60)
