@@ -19,12 +19,12 @@ def showAnimatedPoints(frame, object, displacement:list[float], times:list[float
     displacement.append(object["y"])
     times.append(object["time"])
 
-def drawMotion():
+def drawMotion(intialVerticalVelocity):
 
     physicsObject = {"y":0.0, 
                     "time":0.0,
                     "time_interval":0.05,
-                    "u":30,
+                    "u":intialVerticalVelocity,
                     "a":-9.81} #intial velocity
     
     displacement = [physicsObject["y"]]
