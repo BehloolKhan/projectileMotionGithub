@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import random
 from matplotlib.animation import FuncAnimation
-import threading #for concurrency
+import math
 
 def showDisplacementTimeGraph(frame, object, displacement:list[float], times:list[float]) -> None:
 
@@ -41,6 +41,44 @@ def showVelocityTimeGraph(frame, physicsObject, velocity, times):
     velocity.append(physicsObject["u"])
     times.append(physicsObject["time"])
 
+def RangeVsAngle(frame, angle, Range, timeOfFlight:float|int, velocity:int):
+
+    plt.cla()
+
+    plt.xlabel("angle of projection")
+    plt.ylabel("range")
+
+    plt.plot(angle, Range)
+
+    newAngle = angle[-1]
+    newAngle+=1
+    angle.append(newAngle)
+
+    #convert angle to radians
+    newAngle = newAngle*math.pi/180
+
+    timeOfFlight = -2*velocity*math.sin(newAngle)/-9.81
+
+    range = math.cos(newAngle)*timeOfFlight*velocity
+    Range.append(range)
+
+def drawRangeAngleGraph(velocity):
+
+    angle = [1]
+    newAngle = 1
+    #convert angle to radians
+    newAngle = newAngle*math.pi/180
+
+    #calculate the time of flight
+    timeOfFlight = -2*velocity*math.sin(newAngle)/-9.81
+
+    range = math.cos(newAngle)*timeOfFlight*velocity
+    Range = [range]
+
+
+    ani3 = FuncAnimation(plt.gcf(), RangeVsAngle, frames=89, interval=50, fargs=(angle, Range, timeOfFlight, velocity), repeat=False)
+
+    plt.show()
 
 def drawGraphs(intialVerticalVelocity, K:int):
 

@@ -14,7 +14,7 @@ import random
 
 #functions and classes needed from files in the same directory
 from projectileMotionFile import Ball, mainGameLoop
-from quickMotion import drawGraphs
+from quickMotion import drawGraphs, drawRangeAngleGraph
 
 
 #setting up the main control panel
@@ -117,6 +117,33 @@ class controlPanel(tk.Toplevel):
         del self #free up some space
 
 
+class MaxRange(tk.Toplevel):
+
+    #call the constructor method
+
+    def __init__(self):
+
+        #call the parent constructor method when this method is called
+        super().__init__()
+
+        tk.Label(self, text="velocity").grid(row=0, column=0)
+        self.velocityScale = tk.Scale(self, from_=0, to=100, orient="horizontal", width=25)
+        self.velocityScale.grid(row=0, column=1)
+
+        self.velocityButton = tk.Button(self, text="submit velocity", command=self.setVelocity)
+        self.velocityButton.grid(row=0, column=2)
+
+        self.displayGraph = tk.Button(self, text="show graph of range vs angle", command=self.showGraph)
+        self.displayGraph.grid(row=1, column=0)
+
+
+    def setVelocity(self):
+        self.velocity = self.velocityScale.get()
+
+    def showGraph(self):
+        drawRangeAngleGraph(self.velocity)
+    
+    #need to call this to display graph:
 
 #function to call control panel and open it
 def openControl():
@@ -124,10 +151,16 @@ def openControl():
     controlPanel()
     return None
 
+def openMaxRange():
+    MaxRange()
+    return None
 
 #button to open this control panel
 openControlPanel = tk.Button(root, text="open control panel", command=openControl)
 openControlPanel.pack()
+
+openMaxRangePanel = tk.Button(root, text="click this button to see the angle that gives u the max range", command=openMaxRange)
+openMaxRangePanel.pack()
 
 
 root.mainloop()
