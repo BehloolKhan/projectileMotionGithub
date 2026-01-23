@@ -14,7 +14,8 @@ import random
 
 #functions and classes needed from files in the same directory
 from projectileMotionFile import Ball, mainGameLoop
-from quickMotion import drawMotion, showAnimatedPoints
+from quickMotion import drawGraphs
+
 
 #setting up the main control panel
 
@@ -37,8 +38,10 @@ class controlPanel(tk.Toplevel):
 
         #setting up the window
 
-        self.geometry("400x400")
+        self.geometry("800x400")
         self.title("control panel")
+
+        self.K = 0 # defulat value for this project
 
 
         tk.Label(self, text="angle of projection").grid(row=0, column=0)
@@ -52,17 +55,39 @@ class controlPanel(tk.Toplevel):
         self.submitInfo = tk.Button(self, text="submit all information", command=self.getInfo, width=20)
         self.submitInfo.grid(row=2, column=0)
 
-        self.launchButton = tk.Button(self, command=self.intialiseGameLoop, width=25, text="Launch")
-        self.launchButton.grid(row=3, column=0)
+        self.launchButton = tk.Button(self, command=self.intialiseGameLoop, text="Launch")
+        self.launchButton.grid(row=4, column=0)
+
+        self.turnOn = tk.Button(self, text="turn on air resistance", command=self.simulateAirResistance)
+        self.turnOn.grid(row=3, column=0)
 
         self.displayGraph = tk.Button(self, text="display graph of projectile motion", command=self.drawMotionBall)
-        self.displayGraph.grid(row=4, column = 0)
+        self.displayGraph.grid(row=5, column = 0)
 
-        self.closeAll = tk.Button(self, command=self.destroyPanel, width=25, text="close control panel")
-        self.closeAll.grid(row=5, column=0)
+        self.closeAll = tk.Button(self, command=self.destroyPanel, text="close control panel")
+        self.closeAll.grid(row=6, column=0)
 
 
     #methods this object will have are the functions called by buttons
+
+    def simulateAirResistance(self):
+        #now we need to think about what need to be displayed
+        
+        self.airResistanceScale = tk.Scale(self, from_ = 0, to=10, width=25, orient="horizontal")
+        self.airResistanceScale.grid(row=3, column=1)
+
+        self.submitResistance = tk.Button(self, text="submit", command=self.setAirResistance)
+        self.submitResistance.grid(row=3, column=2)
+
+        self.turnOff = tk.Button(self, text="turn off air resistance", command=self.resetAirResistance)
+        self.turnOff.grid(row=4, column=1)
+
+    def setAirResistance(self):
+        self.K = self.airResistanceScale.get()
+
+    def resetAirResistance(self):
+        self.airResistanceScale.set(0) # reset to 0
+        self.setAirResistance()
 
     def drawMotionBall(self):
 
@@ -70,11 +95,11 @@ class controlPanel(tk.Toplevel):
         angleRadians = self.angle/180*numpy.pi
         verticalVelocity = self.velocity*math.sin(angleRadians)
         
-        drawMotion(verticalVelocity)
+        drawGraphs(verticalVelocity, self.K)
 
     def intialiseGameLoop(self):
 
-        mainGameLoop(self.velocity, self.angle) # main game loop with values it gets
+        mainGameLoop(self.velocity, self.angle, self.K) # main game loop with values it gets
 
     def getInfo(self):
 

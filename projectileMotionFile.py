@@ -28,13 +28,20 @@ class Ball(pygame.sprite.Sprite):
         #need to convert angle value into radians
         angle = ((numpy.pi) / 180) * angle
 
-        self.speed_horizontal = -initialVelocity*math.cos(angle)
-        self.speed_vertical = initialVelocity*math.sin(angle)
+        self.speed_horizontal = initialVelocity*math.cos(angle)
+        self.speed_vertical = -initialVelocity*math.sin(angle)
         self.scale_factor = 10 #10 pixels = 1 meter
 
         self.line_scale_factor = 4 #4 pixels = one meter
         
         pygame.draw.circle(self.surface, self.color, self.center, self.radius)
+
+    def getUpdatedAcceleration(self):
+        
+        overallAcceleration = (self.verticalAcceleration**2) + (self.horizontalAcceleration**2)
+        overallAcceleration = math.sqrt(overallAcceleration)
+
+        return overallAcceleration
 
 
     def update(self, time):
@@ -46,7 +53,6 @@ class Ball(pygame.sprite.Sprite):
         #need access to k value
         #need access to current velocity
         #F = -KV
-
         resistiveHorizontal = -self.K*self.speed_horizontal
         resistiveVertical = -self.K*self.speed_vertical
 
@@ -137,6 +143,9 @@ def mainGameLoop(initialVelocity, angle, k=0):
         displayProperties(screen, textProperties, font, (0, 0, 0), 0, SCREEN_HEIGHT-70)
         textProperties = f"time: {cumulativeTime} seconds"
         displayProperties(screen, textProperties, font, (0, 0, 0), 0, SCREEN_HEIGHT-40)
+        textProperties = f"overall maginitude of acceleration: {ball.getUpdatedAcceleration()} ms^-2"
+        displayProperties(screen, textProperties, font, (0, 0, 0), 0, SCREEN_HEIGHT-130)
+
 
         pygame.display.flip() #update the display
 
@@ -149,4 +158,4 @@ def mainGameLoop(initialVelocity, angle, k=0):
     pygame.quit() #show down the pyagme window from here
 
 if __name__ == "__main__":
-    mainGameLoop(-30, 30, 4)
+    mainGameLoop(30, 30, 4)
