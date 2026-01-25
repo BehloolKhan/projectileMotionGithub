@@ -142,8 +142,7 @@ class MaxRange(tk.Toplevel):
 
     def showGraph(self):
         drawRangeAngleGraph(self.velocity)
-    
-    #need to call this to display graph:
+
 
 #function to call control panel and open it
 def openControl():
