@@ -30,12 +30,12 @@ to see ball being launched:
 
 
 too see graphs of motion:
-18.repeat steps 1-11
-19.click on display "graph of projectile motion"
+18. repeat steps 1-11
+19. click on display "graph of projectile motion"
 20. 2 graphs will appear one after the other, one: vertical displacement vs time, vertical velocity vs time
 21. click on the Xs on the top right corner of each window to close them
 
-22.click on close control panel or alternatively repeat steps 1-17 or 18-21 to see the ball being launched in projectile motion or too see the graphs of motions
+22. click on close control panel or alternatively repeat steps 1-17 or 18-21 to see the ball being launched in projectile motion or too see the graphs of motions
 
 23. once u r back on the home page, click the second button to see the angle that will give u the maximum range
 24. U will see a slider, use it to set to the velocity at launch, again press submit
